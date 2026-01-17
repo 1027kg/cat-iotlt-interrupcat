@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterrupCat Settings</title>
+    <link rel="stylesheet" href="options.css">
+    <script src="../libs/wavesurfer.min.js"></script>
+    <script src="../libs/regions.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>設定</h1>
+        </header>
+
+        <main>
+            <section class="section">
+                <h2>音声設定</h2>
+                <p style="color: var(--x-gray); margin-bottom: 12px;">タイピング時に鳴らす音声を新しく追加します。</p>
+
+                <div id="upload-area" class="upload-area">
+                    <p>音声または動画ファイルをドラッグ＆ドロップ</p>
+                    <p style="font-size: 12px; color: var(--x-gray);">またはクリックしてファイルを選択</p>
+                    <input type="file" id="file-input" hidden accept="audio/*,video/*">
+                </div>
+
+                <div id="editor-container" style="display: none;">
+                    <div id="waveform-container">
+                        <div id="waveform"></div>
+                    </div>
+
+                    <div class="time-info">
+                        選択範囲: <span id="start-time">0.00</span>s - <span id="end-time">0.00</span>s
+                        (長さ: <span id="duration">0.00</span>s)
+                    </div>
+
+                    <div class="volume-control" style="margin-top: 16px;">
+                        <label for="volume-slider" style="font-size: 14px; color: var(--x-gray);">音量調整:</label>
+                        <input type="range" id="volume-slider" min="0" max="3" step="0.1" value="1.0"
+                            style="width: 100%; accent-color: var(--x-blue);">
+                    </div>
+
+                    <div class="controls">
+                        <button id="play-btn" class="btn btn-outline">▶ 再生 / 停止</button>
+                        <button id="save-btn" class="btn btn-primary">リストに追加して設定</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>音声リスト</h2>
+                <p style="color: var(--x-gray); margin-bottom: 12px;">使用したい音声を選択してください（最大5件まで保存されます）。</p>
+                <div id="sound-list" class="sound-list">
+                    <!-- Sounds will be injected here -->
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>再生トリガー設定</h2>
+                <p style="color: var(--x-gray); margin-bottom: 12px;">再生のきっかけになるキーや単語を設定します。</p>
+
+                <div class="trigger-config">
+                    <h3>キー入力 (英数字1文字)</h3>
+                    <div id="key-trigger-list" class="trigger-list">
+                        <!-- Dynamic list -->
+                    </div>
+                    <div class="add-trigger-row">
+                        <input type="text" id="new-key-input" maxlength="1" placeholder="例: c">
+                        <button id="add-key-btn" class="btn-add">追加</button>
+                    </div>
+
+                    <h3 style="margin-top: 24px;">IME 変換単語</h3>
+                    <div id="word-trigger-list" class="trigger-list">
+                        <!-- Dynamic list -->
+                    </div>
+                    <div class="add-trigger-row">
+                        <input type="text" id="new-word-input" placeholder="例: かわいい">
+                        <button id="add-word-btn" class="btn-add">追加</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="options.js"></script>
+</body>
+
+</html>

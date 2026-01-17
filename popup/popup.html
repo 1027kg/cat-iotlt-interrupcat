@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="popup-container">
+        <div class="header">
+            <span class="title">InterrupCat</span>
+        </div>
+
+        <div class="menu-item" id="toggle-power">
+            <span>機能の有効化</span>
+            <label class="switch">
+                <input type="checkbox" id="power-switch" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="menu-item" id="play-preview">
+            <span>設定音の再生</span>
+            <button class="icon-btn">🔊</button>
+        </div>
+
+        <div class="menu-item" id="open-settings">
+            <span>詳細設定</span>
+            <span class="arrow">→</span>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
