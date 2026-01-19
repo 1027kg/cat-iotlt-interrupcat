@@ -71,24 +71,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             const { isEnabled } = await chrome.storage.local.get(['isEnabled']);
             if (isEnabled === false) return;
 
-            const { activeSoundId } = await chrome.storage.local.get(['activeSoundId']);
-            await sendMessageToOffscreen({ type: 'PLAY_AUDIO', activeSoundId });
+            const { activeSoundIds } = await chrome.storage.local.get({ activeSoundIds: ['default'] });
+            const ids = Array.isArray(activeSoundIds) ? activeSoundIds : [activeSoundIds || 'default'];
+
+            // ランダムに1つ選択
+            const randomId = ids[Math.floor(Math.random() * ids.length)];
+            await sendMessageToOffscreen({ type: 'PLAY_AUDIO', activeSoundId: randomId });
         })();
     } else if (message.type === 'SOUND_UPDATED') {
         (async () => {
-            const { activeSoundId } = await chrome.storage.local.get(['activeSoundId']);
-            await sendMessageToOffscreen({ type: 'UPDATE_CACHE', activeSoundId });
+            const { activeSoundIds } = await chrome.storage.local.get({ activeSoundIds: ['default'] });
+            await sendMessageToOffscreen({ type: 'UPDATE_CACHE', activeSoundIds });
         })();
     }
-    return true; // 非同期応答を許可（今回は使わないが慣習として）
 });
 
-// 初期化時にオフスクリーンを作成
+// 初期化時にオフスクリーンを作成しキャッシュを更新
 (async () => {
     try {
-        const { activeSoundId } = await chrome.storage.local.get(['activeSoundId']);
-        await sendMessageToOffscreen({ type: 'UPDATE_CACHE', activeSoundId });
+        const { activeSoundIds } = await chrome.storage.local.get({ activeSoundIds: ['default'] });
+        // リトライ機能付きの関数を使用することで、起動直後の接続エラーを回避
+        await sendMessageToOffscreen({ type: 'UPDATE_CACHE', activeSoundIds });
+        console.log('InterrupCat: Initialized offscreen cache.');
     } catch (e) {
-        console.warn('Initial offscreen setup postponed:', e);
+        console.warn('InterrupCat: Initial offscreen setup failed, will retry on next trigger:', e);
     }
 })();

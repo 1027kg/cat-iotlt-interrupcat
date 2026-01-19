@@ -160,6 +160,11 @@ h1 {
   border-color: var(--x-blue);
 }
 
+#playground-input:focus {
+  border-color: var(--x-blue) !important;
+  box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.1);
+}
+
 .remove-trigger {
   background: none;
   border: none;
@@ -205,30 +210,189 @@ h1 {
   background: transparent;
   border: none;
   padding: 4px;
-  font-size: 14px;
+  border: 1px solid var(--x-border);
+  border-radius: 8px;
   outline: none;
-  color: var(--x-text);
+  font-size: 14px;
+  transition: all 0.2s;
 }
 
-.add-trigger-row .btn-add {
+.add-trigger
+
+/* 汎用ボタンスタイル (Xスタイル) */
+.primary-btn {
   background-color: var(--x-blue);
-  color: white;
+  color: #ffffff;
   border: none;
-  padding: 6px 16px;
+  padding: 0 20px;
+  height: 40px;
   border-radius: 9999px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.add-trigger-row .btn-add:hover {
-  opacity: 0.9;
+.primary-btn:hover {
+  background-color: var(--x-blue-hover);
 }
 
-.add-trigger-row .btn-add:disabled {
+/* 保存ボタン (セカンダリスタイル) */
+.btn-save-secondary {
+  background-color: #eff3f4;
+  /* うっすいグレー */
+  color: #0f1419;
+  border: none;
+  padding: 0 20px;
+  height: 40px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-save-secondary:hover {
+  background-color: #d7dbdc;
+  /* 少し暗いグレー */
+}
+
+.btn-save-secondary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.primary-btn:disabled {
+  background-color: #8ecdf8;
+  /* 薄い青 */
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #1d9bf0;
+  /* Xブルーの境界線に戻す */
+  color: #1d9bf0;
+  padding: 0 16px;
+  height: 38px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 再生ボタンなどは青枠に変更 */
+#play-btn {
+  border-color: var(--x-blue);
+  color: var(--x-blue);
+}
+
+.btn-outline:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+  border-color: var(--x-blue);
+  color: var(--x-blue);
+}
+
+/* 入力フォーム (Xスタイル) */
+.add-trigger {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.add-trigger input[type="text"] {
+  flex: 1;
+  background-color: #ffffff;
+  border: 1px solid var(--x-border);
+  border-radius: 4px;
+  /* Xのフォーム風に少し角を丸める */
+  padding: 12px;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--x-text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.add-trigger input[type="text"]:focus {
+  border-color: var(--x-blue);
+  box-shadow: 0 0 0 1px var(--x-blue);
+}
+
+.material-symbols-outlined {
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.control-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--x-gray);
+}
+
+.control-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--x-blue);
+  cursor: pointer;
+  height: 6px;
+  background: transparent;
+  appearance: none;
+}
+
+/* スライダー全体の背景（非選択部分含む） */
+.control-group input[type="range"]::-webkit-slider-runnable-track {
+  background-color: rgba(29, 155, 240, 0.1);
+  /* 右側のうっすい青 */
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* つまみ自体のスタイル（念のため） */
+.control-group input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: var(--x-blue);
+  margin-top: -5px;
+  /* (track_height - thumb_height) / 2 */
+}
+
+/* Chrome等のブラウザで左側を青く見せるための擬似要素的な挙動は、標準のアクセントカラーに任せる */
+
+#play-btn {
+  height: 38px;
+  padding: 0 16px;
+  white-space: nowrap;
 }
 
 .sound-list {
@@ -241,9 +405,8 @@ h1 {
 .sound-item {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  border: 1px solid var(--x-border);
-  border-radius: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--x-border);
   cursor: pointer;
   transition: background-color 0.2s;
   gap: 12px;
@@ -251,6 +414,37 @@ h1 {
 
 .sound-item:hover {
   background-color: var(--x-hover);
+}
+
+.sound-item-actions {
+  display: flex;
+  gap: 4px;
+  /* 距離を少し詰める */
+}
+
+.icon-btn-small {
+  background: transparent;
+  border: none;
+  color: var(--x-gray);
+  cursor: pointer;
+  padding: 8px;
+  /* クリック領域を確保しつつ丸い背景を綺麗に */
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.icon-btn-small:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+  color: var(--x-blue);
+}
+
+.sound-delete-small:hover {
+  background-color: rgba(244, 33, 46, 0.1);
+  color: #f4212e;
 }
 
 .sound-item.selected {
@@ -267,6 +461,7 @@ h1 {
 
 .sound-name {
   flex: 1;
+  font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;

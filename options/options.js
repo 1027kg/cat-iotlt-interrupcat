@@ -43,7 +43,7 @@ async function getAllSounds() {
 /**
  * 音聲データの保存（古いものを削除）
  */
-async function saveSoundToList(name, blob, startTime, endTime, volume) {
+async function saveSoundToList(name, blob, startTime, endTime, volume, fadeIn, fadeOut) {
   const allSounds = await getAllSounds();
   const customSounds = allSounds.filter(s => s.id !== 'default');
 
@@ -69,6 +69,8 @@ async function saveSoundToList(name, blob, startTime, endTime, volume) {
     startTime,
     endTime,
     volume,
+    fadeIn,
+    fadeOut,
     updatedAt: Date.now()
   };
   store.put(soundData);
@@ -90,6 +92,10 @@ const endTimeText = document.getElementById('end-time');
 const durationText = document.getElementById('duration');
 const soundListContainer = document.getElementById('sound-list');
 const volumeSlider = document.getElementById('volume-slider');
+const fadeInSlider = document.getElementById('fade-in-slider');
+const fadeOutSlider = document.getElementById('fade-out-slider');
+const fadeInLabel = document.getElementById('fade-in-label');
+const fadeOutLabel = document.getElementById('fade-out-label');
 
 // Trigger UI Elements
 const keyTriggerList = document.getElementById('key-trigger-list');
@@ -103,12 +109,31 @@ const addWordBtn = document.getElementById('add-word-btn');
 document.addEventListener('DOMContentLoaded', async () => {
   renderSoundList();
   renderTriggerList();
+
+  // ボリュームラベルの初期化
+  const volumeLabel = document.getElementById('volume-label');
+  volumeSlider.oninput = () => {
+    volumeLabel.textContent = Math.round(volumeSlider.value * 100) + '%';
+  };
+
+  fadeInSlider.oninput = () => {
+    fadeInLabel.textContent = fadeInSlider.value;
+  };
+
+  fadeOutSlider.oninput = () => {
+    fadeOutLabel.textContent = fadeOutSlider.value;
+  };
+
+  // 初期値の反映
+  volumeSlider.dispatchEvent(new Event('input'));
+  fadeInSlider.dispatchEvent(new Event('input'));
+  fadeOutSlider.dispatchEvent(new Event('input'));
 });
 
 // Sound List Rendering
 async function renderSoundList() {
   const allSounds = await getAllSounds();
-  const { activeSoundId } = await chrome.storage.local.get(['activeSoundId']);
+  const { activeSoundIds } = await chrome.storage.local.get({ activeSoundIds: ['default'] });
 
   soundListContainer.innerHTML = '';
 
@@ -123,22 +148,35 @@ async function renderSoundList() {
     return b.updatedAt - a.updatedAt;
   });
 
-  const currentId = activeSoundId || 'default';
+  const currentIds = Array.isArray(activeSoundIds) ? activeSoundIds : [activeSoundIds || 'default'];
 
   soundsToShow.forEach(sound => {
+    const isSelected = currentIds.includes(sound.id);
     const item = document.createElement('div');
-    item.className = `sound-item ${sound.id === currentId ? 'selected' : ''}`;
+    item.className = `sound-item ${isSelected ? 'selected' : ''}`;
 
     item.innerHTML = `
-      <input type="radio" name="sound-active" value="${sound.id}" ${sound.id === currentId ? 'checked' : ''}>
+      <input type="checkbox" class="sound-checkbox" value="${sound.id}" ${isSelected ? 'checked' : ''}>
       <div class="sound-name">${sound.name}</div>
-      <button class="sound-play-small" data-id="${sound.id}">🔊</button>
+      <div class="sound-item-actions">
+        <button class="sound-play-small icon-btn-small" data-id="${sound.id}">
+          <span class="material-symbols-outlined" style="font-size: 18px;">brand_awareness</span>
+        </button>
+        ${sound.id !== 'default' ? `
+          <button class="sound-delete-small icon-btn-small" data-id="${sound.id}">
+            <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+          </button>
+        ` : ''}
+      </div>
     `;
 
     item.addEventListener('click', (e) => {
-      if (e.target.tagName !== 'BUTTON') {
-        setActiveSound(sound.id);
-      }
+      if (e.target.closest('.icon-btn-small') || e.target.type === 'checkbox') return;
+      toggleActiveSound(sound.id);
+    });
+
+    item.querySelector('.sound-checkbox').addEventListener('change', (e) => {
+      toggleActiveSound(sound.id);
     });
 
     item.querySelector('.sound-play-small').addEventListener('click', (e) => {
@@ -146,12 +184,54 @@ async function renderSoundList() {
       previewSound(sound);
     });
 
+    if (sound.id !== 'default') {
+      item.querySelector('.sound-delete-small').addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (confirm('この音声を削除しますか？')) {
+          await deleteSound(sound.id);
+        }
+      });
+    }
+
     soundListContainer.appendChild(item);
   });
 }
 
-async function setActiveSound(id) {
-  await chrome.storage.local.set({ activeSoundId: id });
+async function deleteSound(id) {
+  const db = await initDB();
+  const transaction = db.transaction([STORE_NAME], 'readwrite');
+  const store = transaction.objectStore(STORE_NAME);
+  store.delete(id);
+
+  return new Promise((resolve) => {
+    transaction.oncomplete = async () => {
+      // アクティブリストからも削除
+      const { activeSoundIds } = await chrome.storage.local.get({ activeSoundIds: ['default'] });
+      let newIds = Array.isArray(activeSoundIds) ? activeSoundIds.filter(i => i !== id) : ['default'];
+      if (newIds.length === 0) newIds = ['default'];
+
+      await chrome.storage.local.set({ activeSoundIds: newIds });
+      chrome.runtime.sendMessage({ type: 'SOUND_UPDATED' });
+      await renderSoundList();
+      resolve();
+    };
+  });
+}
+
+async function toggleActiveSound(id) {
+  const { activeSoundIds } = await chrome.storage.local.get({ activeSoundIds: ['default'] });
+  let newIds = Array.isArray(activeSoundIds) ? [...activeSoundIds] : [activeSoundIds || 'default'];
+
+  if (newIds.includes(id)) {
+    // 1つは残すように制御（任意）
+    if (newIds.length > 1) {
+      newIds = newIds.filter(i => i !== id);
+    }
+  } else {
+    newIds.push(id);
+  }
+
+  await chrome.storage.local.set({ activeSoundIds: newIds });
   chrome.runtime.sendMessage({ type: 'SOUND_UPDATED' });
   renderSoundList();
 }
@@ -172,7 +252,8 @@ async function previewSound(sound) {
 
   const audio = new Audio(url);
   audio.currentTime = sound.startTime;
-  audio.volume = Math.min(1.0, sound.volume || 1.0);
+  // HTMLMediaElement.volume は 0.0 ~ 1.0 の範囲である必要があるためクランプ
+  audio.volume = Math.min(1.0, Math.max(0.0, sound.volume || 1.0));
   audio.play();
   currentPreviewAudio = audio;
 
@@ -219,6 +300,12 @@ async function addTrigger(input, type) {
   const value = input.value.trim();
   if (!value) return;
 
+  // 1文字制限はキー入力用の場合のみ
+  if (type === 'key' && value.length > 1) {
+    alert('キー入力は1文字で入力してください。');
+    return;
+  }
+
   const storageKey = type === 'key' ? 'targetKeys' : 'targetWords';
   const data = await chrome.storage.local.get({
     targetKeys: ['c', 'a', 't', 'C', 'A', 'T'],
@@ -244,6 +331,28 @@ async function removeTrigger(text, type) {
 
 addKeyBtn.onclick = () => addTrigger(newKeyInput, 'key');
 addWordBtn.onclick = () => addTrigger(newWordInput, 'word');
+
+// Playground Implementation
+const playgroundInput = document.getElementById('playground-input');
+if (playgroundInput) {
+  // キー入力検知
+  playgroundInput.addEventListener('keydown', async (e) => {
+    if (e.isComposing || e.keyCode === 229) return;
+
+    const { targetKeys } = await chrome.storage.local.get({ targetKeys: ['c', 'a', 't', 'C', 'A', 'T'] });
+    if (targetKeys.includes(e.key)) {
+      chrome.runtime.sendMessage({ type: 'TRIGGER_PLAY' });
+    }
+  });
+
+  // IME変換確定検知
+  playgroundInput.addEventListener('compositionend', async (e) => {
+    const { targetWords } = await chrome.storage.local.get({ targetWords: ['かわいい', 'kawaii', 'カワイイ'] });
+    if (targetWords.includes(e.data)) {
+      chrome.runtime.sendMessage({ type: 'TRIGGER_PLAY' });
+    }
+  });
+}
 
 // Upload Handling
 uploadArea.addEventListener('click', () => fileInput.click());
@@ -276,7 +385,7 @@ function loadFile(file) {
     container: '#waveform',
     waveColor: '#1d9bf0',
     progressColor: '#1a8cd8',
-    cursorColor: '#0f1419',
+    cursorColor: '#e1e8ed', // うっすいグレー（Xのライトグレー）
     cursorWidth: 4,
     barWidth: 2,
     barRadius: 3,
@@ -328,15 +437,28 @@ playBtn.addEventListener('click', () => {
   if (wavesurfer.isPlaying()) {
     wavesurfer.pause();
   } else {
-    const currentTime = wavesurfer.getCurrentTime();
-    wavesurfer.setVolume(parseFloat(volumeSlider.value));
-    wavesurfer.play(currentTime);
+    let currentTime = wavesurfer.getCurrentTime();
+    const duration = wavesurfer.getDuration();
+
+    // もし再生位置が最後まで到達していたら、最初（またはリージョンの開始位置）に戻す
+    const endPos = activeRegion ? activeRegion.end : duration;
+    const startPos = activeRegion ? activeRegion.start : 0;
+
+    if (currentTime >= endPos - 0.01) {
+      wavesurfer.setTime(startPos);
+      currentTime = startPos;
+    }
+
+    // HTMLMediaElement の制限によりプレビュー時は 1.0 に制限
+    wavesurfer.setVolume(Math.min(1.0, parseFloat(volumeSlider.value)));
+    wavesurfer.play();
   }
 });
 
 volumeSlider.addEventListener('input', () => {
   if (wavesurfer) {
-    wavesurfer.setVolume(parseFloat(volumeSlider.value));
+    // プレビュー時は 1.0 に制限
+    wavesurfer.setVolume(Math.min(1.0, parseFloat(volumeSlider.value)));
   }
 });
 
@@ -349,9 +471,20 @@ saveBtn.addEventListener('click', async () => {
     const response = await fetch(wavesurfer.getSrc());
     const blob = await response.blob();
     const volume = parseFloat(volumeSlider.value);
-    const newId = await saveSoundToList(wavesurfer.currentFileName, blob, activeRegion.start, activeRegion.end, volume);
-    await setActiveSound(newId);
+    const fadeIn = parseFloat(fadeInSlider.value);
+    const fadeOut = parseFloat(fadeOutSlider.value);
+    const newId = await saveSoundToList(wavesurfer.currentFileName, blob, activeRegion.start, activeRegion.end, volume, fadeIn, fadeOut);
+
+    // 新しく追加した音声をアクティブリストに追加
+    const { activeSoundIds } = await chrome.storage.local.get({ activeSoundIds: ['default'] });
+    let newIds = Array.isArray(activeSoundIds) ? [...activeSoundIds] : [activeSoundIds || 'default'];
+    if (!newIds.includes(newId)) newIds.push(newId);
+
+    await chrome.storage.local.set({ activeSoundIds: newIds });
+    chrome.runtime.sendMessage({ type: 'SOUND_UPDATED' });
+
     wavesurfer.stop();
+    await renderSoundList(); // リストを再描画して新しく追加された音声を表示
     alert('リストに追加しました！');
     editorContainer.style.display = 'none';
   } catch (err) {
@@ -359,6 +492,6 @@ saveBtn.addEventListener('click', async () => {
     alert('保存に失敗しました。');
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = 'リストに追加して設定';
+    saveBtn.textContent = '選択した音を追加';
   }
 });
