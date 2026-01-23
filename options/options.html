@@ -13,104 +13,151 @@
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>設定</h1>
+    <div class="x-container">
+        <header
+            class="sticky top-0 bg-white/85 backdrop-blur-md px-4 py-3 border-b border-[#eff3f4] z-10 flex items-center justify-between">
+            <h1 class="text-[20px] font-bold">設定</h1>
         </header>
 
         <main>
             <section class="section">
-                <h2>音声設定</h2>
-                <p style="color: var(--x-gray); margin-bottom: 12px;">タイピング時に鳴らす音声を新しく追加します。</p>
+                <h2 class="text-[17px] font-bold mb-1">音声設定</h2>
+                <p class="text-[13px] text-[#536471] mb-3">タイピング時に鳴らす音声を新しく追加します。</p>
 
                 <div id="upload-area" class="upload-area">
-                    <p>音声または動画ファイルをドラッグ＆ドロップ</p>
-                    <p style="font-size: 12px; color: var(--x-gray);">またはクリックしてファイルを選択</p>
+                    <p class="text-[#0f1419] font-bold">音声または動画ファイルをドラッグ＆ドロップ</p>
+                    <p class="text-[12px] text-[#536471]">またはクリックしてファイルを選択</p>
                     <input type="file" id="file-input" hidden accept="audio/*,video/*">
                 </div>
 
-                <div id="editor-container" style="display: none;">
-                    <div id="waveform-container">
+                <div id="editor-container" class="hidden mt-5">
+                    <div id="waveform-container" class="bg-[#f7f9f9] rounded-lg p-3">
                         <div id="waveform"></div>
                     </div>
 
-                    <div class="time-info">
-                        選択範囲: <span id="start-time">0.00</span>s - <span id="end-time">0.00</span>s
-                        (長さ: <span id="duration">0.00</span>s)
+                    <div class="mt-3 text-[14px] text-[#536471]">
+                        選択範囲: <span id="start-time" class="font-mono">0.00</span>s - <span id="end-time"
+                            class="font-mono">0.00</span>s
+                        (長さ: <span id="duration" class="font-mono">0.00</span>s)
                     </div>
 
-                    <div class="controls-container">
+                    <div class="mt-4 flex flex-col gap-4">
                         <!-- 上段: 再生停止ボタン & 音量 -->
-                        <div class="control-row">
-                            <button id="play-btn" class="btn btn-outline" style="flex: 0 0 auto;">
-                                <span class="material-symbols-outlined"
-                                    style="margin-right: 8px;">brand_awareness</span>
-                                再生 / 停止
+                        <div class="flex items-end gap-5">
+                            <button id="play-btn" class="btn-outline shrink-0">
+                                <span class="material-symbols-outlined mr-2">brand_awareness</span>
+                                編集中の音を聴く
                             </button>
-                            <div class="control-group" style="flex: 1;">
-                                <label>音量: <span id="volume-label">100%</span></label>
-                                <input type="range" id="volume-slider" min="0" max="3" step="0.1" value="1.0">
+                            <div class="flex-1 flex flex-col gap-2">
+                                <label class="text-[13px] font-bold text-[#536471]">音量: <span
+                                        id="volume-label">100%</span></label>
+                                <input type="range" id="volume-slider" min="0" max="3" step="0.1" value="1.0"
+                                    class="w-full h-1.5 bg-[#eff3f4] rounded-full appearance-none accent-[#1d9bf0] cursor-pointer">
                             </div>
                         </div>
 
                         <!-- 中段: フェードイン & フェードアウト -->
-                        <div class="control-row">
-                            <div class="control-group" style="flex: 1;">
-                                <label>フェードイン: <span id="fade-in-label">0.1</span>s</label>
-                                <input type="range" id="fade-in-slider" min="0" max="1.0" step="0.1" value="0.1">
+                        <div class="flex gap-5">
+                            <div class="flex-1 flex flex-col gap-2">
+                                <label class="text-[13px] font-bold text-[#536471]">フェードイン: <span
+                                        id="fade-in-label">0.1</span>s</label>
+                                <input type="range" id="fade-in-slider" min="0" max="1.0" step="0.1" value="0.1"
+                                    class="w-full h-1.5 bg-[#eff3f4] rounded-full appearance-none accent-[#1d9bf0] cursor-pointer">
                             </div>
-                            <div class="control-group" style="flex: 1;">
-                                <label>フェードアウト: <span id="fade-out-label">0.1</span>s</label>
-                                <input type="range" id="fade-out-slider" min="0" max="1.0" step="0.1" value="0.1">
+                            <div class="flex-1 flex flex-col gap-2">
+                                <label class="text-[13px] font-bold text-[#536471]">フェードアウト: <span
+                                        id="fade-out-label">0.1</span>s</label>
+                                <input type="range" id="fade-out-slider" min="0" max="1.0" step="0.1" value="0.1"
+                                    class="w-full h-1.5 bg-[#eff3f4] rounded-full appearance-none accent-[#1d9bf0] cursor-pointer">
                             </div>
                         </div>
 
-                        <!-- 下段: 保存ボタン -->
-                        <div class="control-row" style="margin-top: 8px;">
-                            <button id="save-btn" class="btn-save-secondary" style="width: 100%;">選択した音を追加</button>
+                        <!-- 下段: 保存アクション -->
+                        <div class="mt-4">
+                            <button id="save-btn" class="btn-save-secondary !w-full">選択した音を追加</button>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- Save Modal -->
+            <div id="crop-modal" class="modal-overlay hidden">
+                <div class="modal-content save-modal">
+                    <h3 class="text-[17px] font-bold">音声を保存</h3>
+
+                    <div class="modal-body">
+                        <!-- アイコン選択エリア -->
+                        <div class="flex flex-col items-center gap-2">
+                            <label class="text-[13px] font-bold text-[#0f1419] self-start">アイコン（クリックして変更）</label>
+                            <div
+                                class="crop-perspective w-[200px] h-[200px] relative overflow-hidden rounded-full cursor-pointer">
+                                <div class="crop-container w-full h-full bg-[#f7f9f9]">
+                                    <canvas id="crop-canvas"></canvas>
+                                    <div class="crop-mask"></div>
+                                </div>
+                            </div>
+                            <input type="file" id="icon-upload-input" accept="image/png,image/jpeg" class="hidden">
+                        </div>
+
+                        <!-- 名前入力エリア -->
+                        <div class="name-edit-section">
+                            <div class="x-input-group">
+                                <label for="sound-name-input">音声の名前</label>
+                                <input type="text" id="sound-name-input" placeholder=" ">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 mt-6">
+                        <button id="crop-cancel-btn" class="btn-outline h-[40px] px-5 text-[15px]">キャンセル</button>
+                        <button id="crop-ok-btn" class="btn-primary h-[40px] px-5 text-[15px]">保存する</button>
+                    </div>
+                </div>
+            </div>
+
             <section class="section">
-                <h2>音声リスト</h2>
-                <p style="color: var(--x-gray); margin-bottom: 12px;">使用したい音声を選択してください（最大5件まで保存されます）。</p>
-                <div id="sound-list" class="sound-list">
+                <div class="flex items-center justify-between mb-1">
+                    <h2 class="text-[17px] font-bold">音声リスト</h2>
+                    <button id="reset-list-btn"
+                        class="btn-outline !h-[32px] px-4 text-[13px] border-[#f4212e] text-[#f4212e] hover:bg-[rgba(244,33,46,0.1)]">リストをリセット</button>
+                </div>
+                <p class="text-[13px] text-[#536471] mb-3">使用したい音声を選択してください（最大5件）。</p>
+                <div id="sound-list" class="flex flex-col">
                     <!-- Sounds will be injected here -->
                 </div>
             </section>
 
             <!-- Trigger Settings -->
-            <section class="card">
-                <h2>再生トリガー設定</h2>
-                <div class="trigger-group">
-                    <label>特定のキー (英数字1文字ずつ):</label>
-                    <div id="key-trigger-list" class="trigger-list"></div>
-                    <div class="add-trigger">
-                        <input type="text" id="new-key-input" placeholder="a">
-                        <button id="add-key-btn" class="btn btn-outline">追加</button>
+            <section class="section">
+                <h2 class="text-[17px] font-bold mb-4">再生トリガー設定</h2>
+
+                <div class="mb-6">
+                    <label class="text-[13px] font-bold text-[#536471] block mb-2">特定のキー (英数字1文字):</label>
+                    <div id="key-trigger-list" class="flex flex-wrap gap-2 mb-3"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="new-key-input" placeholder="a"
+                            class="flex-1 bg-white border border-[#eff3f4] rounded-md px-3 py-2 text-[15px] outline-none focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0]">
+                        <button id="add-key-btn" class="btn-outline !h-auto py-2 px-6">追加</button>
                     </div>
                 </div>
 
-                <div class="trigger-group">
-                    <label>変換確定時の単語:</label>
-                    <div id="word-trigger-list" class="trigger-list"></div>
-                    <div class="add-trigger">
-                        <input type="text" id="new-word-input" placeholder="かわいい">
-                        <button id="add-word-btn" class="btn btn-outline">追加</button>
+                <div>
+                    <label class="text-[13px] font-bold text-[#536471] block mb-2">変換確定時の単語:</label>
+                    <div id="word-trigger-list" class="flex flex-wrap gap-2 mb-3"></div>
+                    <div class="flex gap-2">
+                        <input type="text" id="new-word-input" placeholder="かわいい"
+                            class="flex-1 bg-white border border-[#eff3f4] rounded-md px-3 py-2 text-[15px] outline-none focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0]">
+                        <button id="add-word-btn" class="btn-outline !h-auto py-2 px-6">追加</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Playground Section -->
-            <section class="card playground-section">
-                <h2>Playground</h2>
-                <p style="font-size: 13px; color: var(--x-gray); margin-bottom: 12px;">
-                    設定した音やトリガーをその場でテストできます。
-                </p>
+            <!-- Playground -->
+            <section class="section bg-[#f7f9f9]/50">
+                <h2 class="text-[17px] font-bold mb-1">Playground</h2>
+                <p class="text-[13px] text-[#536471] mb-3">設定をその場でテストできます。</p>
                 <input type="text" id="playground-input" placeholder="ここに入力してテスト..."
-                    style="width: 100%; padding: 12px; border: 1px solid var(--x-border); border-radius: 8px; font-size: 16px; outline: none;">
+                    class="w-full bg-white border border-[#eff3f4] rounded-md px-4 py-3 text-[16px] outline-none focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0]">
             </section>
         </main>
     </div>

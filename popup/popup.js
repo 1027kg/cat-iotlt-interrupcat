@@ -1,4 +1,4 @@
-document.getElementById('open-settings').addEventListener('click', () => {
+document.getElementById('open-settings-item').addEventListener('click', () => {
     chrome.runtime.openOptionsPage();
 });
 

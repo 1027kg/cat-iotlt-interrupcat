@@ -1,48 +1,22 @@
 :root {
   --x-blue: #1d9bf0;
+  --x-blue-hover: #1a8cd8;
   --x-black: #0f1419;
   --x-gray: #536471;
   --x-light-gray: #eff3f4;
   --x-white: #ffffff;
   --x-border: #eff3f4;
-  --x-hover: rgba(15, 20, 25, 0.1);
-  --x-blue-hover: #1a8cd8;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--x-white);
-  color: var(--x-black);
-  line-height: 1.3;
-}
-
-.container {
+/* X-style Container */
+.x-container {
   max-width: 600px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   border-left: 1px solid var(--x-border);
   border-right: 1px solid var(--x-border);
   min-height: 100vh;
-}
-
-header {
-  position: sticky;
-  top: 0;
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--x-border);
-  z-index: 10;
-}
-
-h1 {
-  font-size: 20px;
-  font-weight: 700;
+  background-color: white;
 }
 
 .section {
@@ -50,217 +24,225 @@ h1 {
   border-bottom: 1px solid var(--x-border);
 }
 
-.btn {
+/* Base Utility Classes (Simulating Tailwind basics needed) */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-end {
+  justify-content: space-end;
+}
+
+.gap-1 {
+  gap: 4px;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-3 {
+  gap: 12px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.gap-5 {
+  gap: 20px;
+}
+
+.mt-3 {
+  margin-top: 12px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mt-5 {
+  margin-top: 20px;
+}
+
+.mb-1 {
+  margin-bottom: 4px;
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+
+.mb-3 {
+  margin-bottom: 12px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mb-6 {
+  margin-bottom: 24px;
+}
+
+.p-2 {
+  padding: 8px;
+}
+
+.p-3 {
+  padding: 12px;
+}
+
+.px-3 {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.py-2 {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.py-3 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.rounded-lg {
+  border-radius: 8px;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.hidden {
+  display: none;
+}
+
+.sticky {
+  position: sticky;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shrink-0 {
+  flex-shrink: 0;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* X-style Buttons */
+.btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 0 24px;
+  height: 44px;
   border-radius: 9999px;
   font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border: none;
   font-size: 15px;
-}
-
-.btn-primary {
+  transition: background-color 0.2s;
   background-color: var(--x-blue);
   color: white;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
   background-color: var(--x-blue-hover);
 }
 
+.btn-primary:disabled {
+  background-color: #8ecdf8;
+  cursor: not-allowed;
+}
+
 .btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  height: 44px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.2s;
   background-color: transparent;
-  border: 1px solid var(--x-border);
+  border: 1px solid #cfd9de;
   color: var(--x-black);
+  cursor: pointer;
 }
 
 .btn-outline:hover {
-  background-color: var(--x-hover);
+  background-color: rgba(15, 20, 25, 0.1);
 }
 
-.card {
-  border: 1px solid var(--x-border);
-  border-radius: 16px;
-  padding: 16px;
-  margin-top: 12px;
-}
-
-.upload-area {
-  border: 2px dashed var(--x-border);
-  border-radius: 16px;
-  padding: 40px;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.upload-area:hover {
-  border-color: var(--x-blue);
-}
-
-#waveform-container {
-  width: 100%;
-  margin-top: 20px;
-  background-color: #f7f9f9;
-  border-radius: 8px;
-  padding: 10px;
-}
-
-.controls {
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.time-info {
-  margin-top: 12px;
-  font-size: 14px;
-  color: var(--x-gray);
-}
-
-.trigger-config h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--x-text);
-  margin: 24px 0 12px 0;
-}
-
-.trigger-config h3:first-child {
-  margin-top: 0;
-}
-
-.trigger-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.trigger-tag {
-  display: inline-flex;
-  align-items: center;
-  background-color: rgba(29, 155, 240, 0.05);
-  /* 薄い青 */
-  border: 1px solid rgba(29, 155, 240, 0.4);
-  /* 青い線 */
-  padding: 6px 14px;
-  border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--x-blue);
-  transition: all 0.2s;
-}
-
-.trigger-tag:hover {
-  background-color: rgba(29, 155, 240, 0.1);
-  border-color: var(--x-blue);
-}
-
-#playground-input:focus {
-  border-color: var(--x-blue) !important;
-  box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.1);
-}
-
-.remove-trigger {
-  background: none;
-  border: none;
-  color: var(--x-gray);
-  margin-left: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-.remove-trigger:hover {
-  background-color: rgba(244, 33, 46, 0.1);
-  color: #f4212e;
-}
-
-.add-trigger-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background-color: var(--x-hover);
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: 1px dashed var(--x-border);
-  transition: border-color 0.2s;
-}
-
-.add-trigger-row:focus-within {
-  border-color: var(--x-blue);
-  background-color: #fff;
-  border-style: solid;
-}
-
-.add-trigger-row input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 4px;
-  border: 1px solid var(--x-border);
-  border-radius: 8px;
-  outline: none;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-
-.add-trigger
-
-/* 汎用ボタンスタイル (Xスタイル) */
-.primary-btn {
-  background-color: var(--x-blue);
-  color: #ffffff;
-  border: none;
-  padding: 0 20px;
-  height: 40px;
-  border-radius: 9999px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.primary-btn:hover {
-  background-color: var(--x-blue-hover);
-}
-
-/* 保存ボタン (セカンダリスタイル) */
 .btn-save-secondary {
-  background-color: #eff3f4;
-  /* うっすいグレー */
-  color: #0f1419;
-  border: none;
-  padding: 0 20px;
-  height: 40px;
-  border-radius: 9999px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0 20px;
+  height: 40px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 15px;
+  transition: background-color 0.2s;
+  background-color: var(--x-light-gray);
+  color: var(--x-black);
+  border: none;
+  cursor: pointer;
 }
 
 .btn-save-secondary:hover {
   background-color: #d7dbdc;
-  /* 少し暗いグレー */
 }
 
 .btn-save-secondary:disabled {
@@ -268,140 +250,85 @@ h1 {
   cursor: not-allowed;
 }
 
-.primary-btn:disabled {
-  background-color: #8ecdf8;
-  /* 薄い青 */
-  cursor: not-allowed;
-}
-
-.btn-outline {
-  background-color: transparent;
-  border: 1px solid #1d9bf0;
-  /* Xブルーの境界線に戻す */
-  color: #1d9bf0;
-  padding: 0 16px;
-  height: 38px;
-  border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 再生ボタンなどは青枠に変更 */
-#play-btn {
-  border-color: var(--x-blue);
-  color: var(--x-blue);
-}
-
-.btn-outline:hover {
-  background-color: rgba(29, 155, 240, 0.1);
-  border-color: var(--x-blue);
-  color: var(--x-blue);
-}
-
-/* 入力フォーム (Xスタイル) */
-.add-trigger {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.add-trigger input[type="text"] {
-  flex: 1;
-  background-color: #ffffff;
+/* Floating Label Input */
+.x-input-group {
+  position: relative;
   border: 1px solid var(--x-border);
   border-radius: 4px;
-  /* Xのフォーム風に少し角を丸める */
-  padding: 12px;
-  font-size: 15px;
-  line-height: 20px;
-  color: var(--x-text);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 8px 12px;
+  background-color: white;
+  transition: all 0.2s;
+  margin-top: 20px;
 }
 
-.add-trigger input[type="text"]:focus {
+.x-input-group:hover {
+  border-color: var(--x-blue);
+  /* ホバー時に青枠 */
+}
+
+.x-input-group:focus-within {
   border-color: var(--x-blue);
   box-shadow: 0 0 0 1px var(--x-blue);
 }
 
-.material-symbols-outlined {
-  vertical-align: middle;
-  line-height: 1;
-}
-
-.controls-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.control-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 20px;
-}
-
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.control-group label {
+.x-input-group label {
+  display: block;
   font-size: 13px;
-  font-weight: 700;
   color: var(--x-gray);
+  margin-bottom: 2px;
+  pointer-events: none;
+  transition: color 0.2s;
 }
 
-.control-group input[type="range"] {
+.x-input-group:focus-within label {
+  color: var(--x-blue);
+}
+
+.x-input-group input {
   width: 100%;
-  accent-color: var(--x-blue);
-  cursor: pointer;
-  height: 6px;
-  background: transparent;
-  appearance: none;
+  border: none;
+  outline: none;
+  font-size: 17px;
+  padding: 0;
+  color: var(--x-black);
+  background-color: transparent;
 }
 
-/* スライダー全体の背景（非選択部分含む） */
-.control-group input[type="range"]::-webkit-slider-runnable-track {
-  background-color: rgba(29, 155, 240, 0.1);
-  /* 右側のうっすい青 */
-  height: 6px;
-  border-radius: 3px;
+.name-edit-section {
+  margin-bottom: 8px;
+  /* 下のボタンとの隙間を確保 */
 }
 
-/* つまみ自体のスタイル（念のため） */
-.control-group input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: var(--x-blue);
-  margin-top: -5px;
-  /* (track_height - thumb_height) / 2 */
-}
-
-/* Chrome等のブラウザで左側を青く見せるための擬似要素的な挙動は、標準のアクセントカラーに任せる */
-
-#play-btn {
-  height: 38px;
-  padding: 0 16px;
-  white-space: nowrap;
-}
-
-.sound-list {
-  display: flex;
-  flex-direction: column;
+/* Trigger Tags */
+.trigger-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(29, 155, 240, 0.05);
+  border: 1px solid rgba(29, 155, 240, 0.4);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--x-blue);
+  transition: all 0.2s;
   gap: 8px;
-  margin-top: 12px;
 }
 
+.trigger-tag:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+  border-color: var(--x-blue);
+}
+
+.remove-trigger {
+  background: none;
+  border: none;
+  color: var(--x-gray);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+}
+
+/* Sound List Item */
 .sound-item {
   display: flex;
   align-items: center;
@@ -413,75 +340,149 @@ h1 {
 }
 
 .sound-item:hover {
-  background-color: var(--x-hover);
+  background-color: rgba(15, 20, 25, 0.03);
+}
+
+.sound-item.selected {
+  background-color: rgba(29, 155, 240, 0.05);
+}
+
+.sound-icon-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f7f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--x-border);
+}
+
+.sound-icon-small img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sound-icon-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #cfd9de;
+  /* #eff3f4より15%ほど暗い、Xの標準境界線色 */
 }
 
 .sound-item-actions {
   display: flex;
   gap: 4px;
-  /* 距離を少し詰める */
 }
 
-.icon-btn-small {
-  background: transparent;
-  border: none;
+.sound-item-actions button {
   color: var(--x-gray);
+  /* デフォルトをグレーに */
+  transition: all 0.2s;
+  background: none;
+  border: none;
   cursor: pointer;
   padding: 8px;
-  /* クリック領域を確保しつつ丸い背景を綺麗に */
-  border-radius: 50%;
-  display: inline-flex;
+  border-radius: 9999px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
-  outline: none;
 }
 
-.icon-btn-small:hover {
+.sound-item-actions .sound-play-small:hover {
   background-color: rgba(29, 155, 240, 0.1);
   color: var(--x-blue);
 }
 
-.sound-delete-small:hover {
+.sound-item-actions .sound-delete-small:hover {
   background-color: rgba(244, 33, 46, 0.1);
   color: #f4212e;
 }
 
-.sound-item.selected {
-  border-color: var(--x-blue);
-  background-color: rgba(29, 155, 240, 0.05);
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: none !important;
+  /* 初期状態は強制的に非表示 */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.sound-item input[type="radio"] {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--x-blue);
-  cursor: pointer;
+.modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  max-width: 90%;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
 }
 
-.sound-name {
-  flex: 1;
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
+.save-modal {
+  width: 440px;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* Crop Tool */
+.crop-perspective {
+  width: 200px;
+  height: 200px;
+  position: relative;
   overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sound-meta {
-  font-size: 12px;
-  color: var(--x-gray);
-}
-
-.sound-play-small {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
   border-radius: 50%;
 }
 
-.sound-play-small:hover {
-  background-color: var(--x-hover);
+.crop-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #f7f9f9;
+}
+
+.crop-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: 50%;
+  /* 外側の暗転マスクと内側の全方位青ボーダーを同時に実現 */
+  box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.4), inset 0 0 0 2px var(--x-blue);
+  z-index: 2;
+}
+
+.crop-container canvas {
+  cursor: grab;
+}
+
+.crop-container canvas:active {
+  cursor: grabbing;
+}
+
+/* Waveform Editor extras */
+.upload-area {
+  border: 2px dashed var(--x-border);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.upload-area:hover {
+  border-color: var(--x-blue);
 }
